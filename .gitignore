@@ -1,5 +1,7 @@
-build/
-install/
-log/
-__pycache__/
-*.pyc
+*
+!.gitignore
+!src/cpp_wcl/model/robot.gazebo
+!src/cpp_wcl/launch/gazebo_model.launch.py
+!src/cpp_wcl/src/wcl_debug_plugin.cpp
+!src/cpp_wcl/model/robot_model.xacro
+!src/cpp_wcl/model/tank_world.world
