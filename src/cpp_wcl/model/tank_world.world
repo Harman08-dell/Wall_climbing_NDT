@@ -1,0 +1,307 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+   <world name="tank_world">
+   <gravity>0 0 -9.81</gravity>
+<!--Tells Gazebo to use the ODE physics engine (a popular rigid-body physics solver).
+Other engines exist (like DART, Bullet), but ODE is the default and stable. -->
+<physics name="default_physics" type="ode"> 
+    <!-- This is the simulation time step in  samller step more accurate seconds.-->
+<max_step_size>0.001</max_step_size>
+<real_time_factor>1.0</real_time_factor>
+<real_time_update_rate>1000</real_time_update_rate>
+<contact_surface_layer>0.001</contact_surface_layer>
+
+</physics>
+<!-- This is give you a  floor so robot doesnt fall into nothing -->
+ <!--  This is give you a  floor so robot doesnt fall into nothing  -->
+ <include>
+    <uri>model://ground_plane</uri>
+ </include>
+
+     <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- ADDING  a  Cylindericla tank  model means an object -->
+     <model name="cylindrical_tank">
+        <static>true</static> <!-- it is fixed not dtnimic -->
+        <pose>3 2 1.5 0 0 0 </pose>
+        <!-- Add a cylinder geometry-->
+         <link name="tank_link">
+           
+           <collision name="tank_collision">
+            <!-- contact Paramter-->
+             
+             <surface>
+               <contact>
+                 <ode/>
+                </contact>
+                <!-- Friction Parameter-->
+                 <friction>
+                   <ode>
+                 <mu>3.0</mu>
+                  <mu2>3.0</mu2>
+                       </ode>
+                      </friction>
+
+
+              </surface>
+              
+              <geometry>
+                
+                
+                <cylinder>
+                  <radius>1.5</radius>
+                  <length>10.0</length>
+                </cylinder>
+              </geometry>
+
+              
+                <sensor name="tank_contact_sensor" type="contact">
+            <always_on>true</always_on>
+            <update_rate>50</update_rate>
+            <contact>
+            <collision>tank_collision</collision>
+            </contact>
+            </sensor>
+
+
+                
+            </collision>
+
+            <visual name="tank_visual">
+                <geometry>
+                    
+                    
+                  <cylinder>
+      <radius>1.5</radius>
+      <length>10.0</length>
+    </cylinder>
+
+                </geometry>
+                <material>
+  <ambient>0.1 0.6 0.8 1</ambient>
+  <diffuse>0.1 0.6 0.8 1</diffuse>
+  <specular>0.2 0.2 0.2 1</specular>
+</material>
+                
+            </visual>
+
+            
+
+
+
+
+         </link>
+
+
+     </model>
+
+
+     <!-- rings in  cylider -->
+
+     <model name="weld_ring_1">
+      <static>true</static>
+      <pose>3 2 2.0 0 0 0 </pose>
+      <link name="ring_link">
+        <collision name="ring_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder> 
+          </geometry>
+          <surface>
+    <friction>
+        <ode>
+            <mu>3.0</mu>      <!-- main friction -->
+            <mu2>3.0</mu2>    <!-- secondary friction -->
+        </ode>
+    </friction>
+    <contact>
+        <ode/>
+    </contact>
+</surface>
+          
+        </collision>
+        <visual name="ring_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder>
+            
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+     </model>
+
+     <model name="weld_ring_2">
+      <static>true</static>
+      <pose>3 2 3.0 0 0 0 </pose>
+      <link name="ring_link">
+        <collision name="ring_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder> 
+          </geometry>
+          <surface>
+    <friction>
+        <ode>
+            <mu>3.0</mu>      <!-- main friction -->
+            <mu2>3.0</mu2>    <!-- secondary friction -->
+        </ode>
+    </friction>
+    <contact>
+        <ode/>
+    </contact>
+</surface>
+          
+        </collision>
+        <visual name="ring_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder>
+            
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+     </model>
+
+     <model name="weld_ring_3">
+      <static>true</static>
+      <pose>3 2 0.75 0 0 0 </pose>
+      <link name="ring_link">
+        <collision name="ring_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder> 
+          </geometry>
+          <surface>
+    <friction>
+        <ode>
+            <mu>3.0</mu>      <!-- main friction -->
+            <mu2>3.0</mu2>    <!-- secondary friction -->
+        </ode>
+    </friction>
+    <contact>
+        <ode/>
+    </contact>
+</surface>
+          
+        </collision>
+        <visual name="ring_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder>
+            
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+     </model>
+
+     <model name="weld_ring_4">
+      <static>true</static>
+      <pose>3 2 4.2 0 0 0 </pose>
+      <link name="ring_link">
+        <collision name="ring_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder> 
+          </geometry>
+          <surface>
+    <friction>
+        <ode>
+            <mu>3.0</mu>      <!-- main friction -->
+            <mu2>3.0</mu2>    <!-- secondary friction -->
+        </ode>
+    </friction>
+    <contact>
+        <ode/>
+    </contact>
+</surface>
+          
+        </collision>
+        <visual name="ring_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder>
+            
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+     </model>
+
+     <model name="weld_ring_5">
+      <static>true</static>
+      <pose>3 2 5.50 0 0 0 </pose>
+      <link name="ring_link">
+        <collision name="ring_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder> 
+          </geometry>
+          <surface>
+    <friction>
+        <ode>
+            <mu>3.0</mu>      <!-- main friction -->
+            <mu2>3.0</mu2>    <!-- secondary friction -->
+        </ode>
+    </friction>
+    <contact>
+        <ode/>
+    </contact>
+</surface>
+          
+        </collision>
+        <visual name="ring_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.52</radius>
+              <length>0.05</length>
+            </cylinder>
+            
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+     </model>
+
+
+
+
+     </world>                               
+     </sdf>
