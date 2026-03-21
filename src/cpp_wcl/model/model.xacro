@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--###############################-->
+<!--URDF DEscription -->
+<robot name="simple_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find cpp_wcl)/model/parameter.xacro" />
+    <link name="world"> </link>
+    <joint name="fixed_joint" type="fixed">
+        <parent link="world"/>
+        <child link="first_link"/>
+
+    </joint>
+
+    <link name="first_link">
+        <visual>
+            <geometry>
+                <box size="${a} ${b} ${c}" />
+
+
+                
+            </geometry>
+            <origin xyz="0.0 0.0 ${s}" rpy="0.0 0.0 0.0"/>
+            <material name="red"/>
+            
+            
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${a} ${b} ${c}" />
+                
+            </geometry>
+            <origin xyz="0.0 0.0 ${s}" rpy="0.0 0.0 0.0"/>
+            
+            
+            
+        </collision>
+        <xacro:inertia_body />
+    </link>
+    <!-- START: Seconed link of the robot and the first joint -->
+     <joint name="first_joint" type="revolute" >
+        <parent link="first_link"/>
+        <child link="second_link"/>
+        <origin xyz="0.0 ${b} ${q}" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0.0 1.0 0.0"/>
+        <limit effort="5000" velocity="10" lower="-1.571" upper="1.571" />
+        <dynamics damping="1.0" friction="1.0"/>
+        
+        
+        
+        
+        
+     </joint>
+
+     <link name="second_link">
+        <visual>
+            <origin xyz="0.0 0.0 ${s}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${a} ${b} ${c}"/>
+                
+            </geometry>
+            <material name="blue"/>
+            
+            
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 ${s}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${a} ${b} ${c}"/>
+                
+            </geometry>
+            
+        </collision>
+        <xacro:inertia_body />
+     </link>
+
+     <!-- START: ROS2 Control Plugin and Defination-->
+      <ros2_control name="RobotController" type="system">
+        <!-- <hardware>
+      <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
+      <param name="example_param_hw_start_duration_sec">2.0</param>
+      <param name="example_param_hw_slowdown">2.0</param>
+    </hardware> -->
+
+
+    <hardware>
+        <plugin>mock_components/GeneralSystem</plugin>
+        <param name="calculate_dynamics">false</param>
+        <param name="disable_commands">false</param>
+         <param name="mock_gpio_commands">false</param>
+        <param name="mock_sensor_commands">false</param>
+        <param name="mock_state_following_offset">0.0</param>
+
+    </hardware>
+    <joint name="first_joint">
+        <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+
+        </command_interface>
+        <state_interface name="position"/>
+    </joint>
+</ros2_control>
+
+</robot>

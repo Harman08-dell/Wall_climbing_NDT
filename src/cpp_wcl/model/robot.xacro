@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="simple_robot">
+    <!--Here we define a the model parameters -->
+    <!--Geometry -->
+    <xacro:property name="base_link_length" value =  "0.5"/>
+     <xacro:property name="base_link_radius" value =  "0.4"/>
+
+     <!--Include the Gazebo definaitions-->
+     <xacro:include filename="$(find cpp_WCL)/model/robot.gazebo"/>
+
+     
+     <link name="dummy">
+
+     </link>
+     <joint name="dummy_joint" type="fixed">
+        
+        <parent link="dummy"/>
+        <child link="base_link"/>
+       
+     </joint>
+
+     <link name = "base_link">
+
+        <visual>
+            <geometry>
+                <cylinder radius="${base_link_radius}" length="${base_link_length}"/>
+                
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            
+            
+        </visual>
+
+        <collision>
+            
+            <geometry>
+                <cylinder radius="${base_link_radius}" length="${base_link_length}"/>
+
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            
+            
+        </collision>
+
+        
+             <inertial>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <mass value="1.0"/>
+  <inertia ixx="0.01" ixy="0.0" ixz="0.0"
+           iyy="0.01" iyz="0.0"
+           izz="0.01"/>
+</inertial>
+
+            
+
+
+     </link>
+
+</robot>

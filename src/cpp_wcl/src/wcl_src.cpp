@@ -1,0 +1,210 @@
+#include <gazebo/gazebo.hh>
+#include <gazebo/physics/physics.hh>
+#include <gazebo/common/common.hh>
+#include <ignition/math/Pose3.hh>
+#include <gazebo/physics/ContactManager.hh>
+#include <gazebo/transport/transport.hh>
+#include <gazebo/msgs/msgs.hh>
+
+
+
+#include <iostream>
+
+namespace gazebo
+{
+    class WclDebugPlugin : public ModelPlugin
+    {
+        public :
+        //Here we are making first constructor of ModelPlugin and then wclDebugPlugin()
+        WclDebugPlugin() : ModelPlugin()
+        {
+
+
+        }
+        void Load(physics::ModelPtr _model, sdf::ElementPtr /*_sdf*/)
+        {
+            this->model = _model;
+            this->lastPrintTime = this->model->GetWorld()->SimTime();
+            this->world = this->model->GetWorld();
+            this->gzNode = gazebo::transport::NodePtr(new gazebo :: transport :: Node());
+            this->gzNode->Init(this->world->Name()); // Connects to Gazebo’s internal message bus for that specific world.
+            this->contactSub = this->gzNode->Subscribe("/gazebo/tank_world/physics/contacts",&WclDebugPlugin::OnContacts,this);
+
+
+            auto contactManager = this->world->Physics()->GetContactManager();
+contactManager->SetNeverDropContacts(false);
+
+            std::cout <<"[wcl Debug Plugin] Loaded for model:"<<this->model->GetName()<< std::endl;
+            //that below line  gives the every time the every time simulation update 
+            // reads sensor data continewsly and  applies forces  and control joints  
+
+            this->updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&WclDebugPlugin::OnUpdate, this));
+
+            //callback function 
+            
+        }
+        
+        void OnContacts(ConstContactsPtr &msg)
+        {
+
+
+            // Assume no tank contact in this message
+           this->isTouchingTank = false;
+
+          // Loop through all contacts in this message
+           for (int i = 0; i < msg->contact_size(); ++i)
+          {
+             const auto &contact = msg->contact(i);
+
+              std::string c1 =  contact.collision1();
+                 std::string c2 =  contact.collision2();
+
+                // Check if either side is the tank collision
+                   if (c1.find("tank_collision") != std::string::npos ||
+                              c2.find("tank_collision") != std::string::npos)
+                                {
+                                      this->isTouchingTank = true;
+                                          break;  // one is enough
+                                }
+
+          }
+
+
+
+        }
+
+        void OnUpdate()
+        {
+            auto pose = this->model->WorldPose();
+            auto contactManager = this->world->Physics()->GetContactManager();
+            auto contacts = contactManager->GetContacts();
+        //     std::cout << "[WCL Debug Plugin] Contacts this frame: "
+        //   << contacts.size() << std::endl;
+
+
+            // for( auto &contact : contacts)
+            // {
+            //     std :: string c1 = contact->collision1->GetName();
+            //     std :: string c2 = contact->collision2->GetName();
+            //     std :: cout <<"[WCL Debug Plugin] Contact: "<<c1<<"<->"<<c2<<std::endl;
+            // }
+
+
+            auto currentTime = this->model->GetWorld()->SimTime();
+            // if((currentTime - lastPrintTime) < 1.0  )
+            // {
+            //     return;
+            // }
+           
+            
+            // std :: cout<<"[wcl Debug Plugin ] Robot Pose:"
+            // <<"x="<<pose.Pos().X()
+            // <<"y="<<pose.Pos().Y()
+            // <<", z=" <<pose.Pos().Z()<<std :: endl;
+            // lastPrintTime = currentTime;
+
+
+            if (this->isTouchingTank && !this->wasTouchingTank)
+{
+//   std::cout << "[WCL Debug Plugin] Touching tank" << std::endl;
+}
+
+this->wasTouchingTank = this->isTouchingTank;
+
+if (this->isTouchingTank)
+{
+    //std::cout << "Applying magnetic force" << std::endl;
+
+
+    auto robotPos = this->model->WorldPose().Pos();
+    auto tankModel = this->world->ModelByName("cylindrical_tank");
+    if (tankModel)
+    {
+
+    auto tankPos = tankModel->WorldPose().Pos();
+    double dx = tankPos.X() - robotPos.X();
+    double dy = tankPos.Y() - robotPos.Y();
+    // double dz = tankPos.Z() - robotPos.Z();
+
+    double magnitude = sqrt(dx*dx + dy*dy );
+    dx = dx/magnitude;
+    dy = dy/magnitude;
+    // dz = dz/magnitude;
+
+    ignition::math::Vector3d dir(dx, dy, 0.0);
+    double magneticStrength = 1500.0;
+
+    double fx = magneticStrength * dir.X();
+    double fy = magneticStrength * dir.Y();
+    double fz = magneticStrength * dir.Z();
+
+    ignition::math::Vector3d magneticForce(fx, fy, fz);
+
+    
+
+
+    //  ApplyForceToWheel("wheel1_link",magneticForce );
+    // ApplyForceToWheel("wheel2_link",magneticForce );
+    // ApplyForceToWheel("wheel3_link", magneticForce);
+    // ApplyForceToWheel("wheel4_link",magneticForce );
+
+     auto bodyLink = this->model->GetLink("body_link");
+     if (bodyLink)
+    {
+
+
+
+        std::cout << "Applying magnetic force" << std::endl;
+
+        ignition::math::Vector3d angVel = bodyLink->WorldAngularVel();
+
+// Kill pitch rotation (Y axis)
+    bodyLink->SetAngularVel(
+    ignition::math::Vector3d(angVel.X(), 0.0, angVel.Z()));
+
+
+        double mass = bodyLink->GetInertial()->Mass();
+      double gravityForce = mass * 9.81;
+
+      ignition::math::Vector3d upward(0, 0, 0.75 * gravityForce);
+      ignition::math::Vector3d totalForce = magneticForce + upward;
+      bodyLink->AddForce(totalForce);
+
+    }
+    }
+
+ }
+    
+    
+
+
+
+     
+
+            
+}
+        private:  
+
+         void ApplyForceToWheel(const std::string &linkName,
+                         const ignition::math::Vector3d &magneticForce)
+  {
+    auto link = this->model->GetLink(linkName);
+    if (link)
+      link->AddForce(magneticForce);
+  }
+        physics ::ModelPtr model;
+        event::ConnectionPtr updateConnection;
+        common::Time lastPrintTime;
+        physics :: WorldPtr world;
+        gazebo :: transport :: NodePtr gzNode;
+        gazebo :: transport::SubscriberPtr contactSub;
+        bool isTouchingTank = false;
+        bool wasTouchingTank = false;
+
+
+
+
+
+    };
+    GZ_REGISTER_MODEL_PLUGIN(WclDebugPlugin)
+}
