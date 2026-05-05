@@ -123,7 +123,7 @@ if (this->isTouchingTank)
 
     auto tankPos = tankModel->WorldPose().Pos();
     
-    double magneticStrength = 500.0;
+    double magneticStrength = 600.0;
 
     
 

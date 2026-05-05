@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot>
     
-    <gazebo reference="body_link">
+    <gazebo reference="base_link">
         <mu1>0.2</mu1> <!-- friction factor-->
         <mu2>0.2</mu2>
         <material>Gazebo/Yellow</material>
@@ -58,9 +58,10 @@
     <publish_odom>true</publish_odom>
     <publish_odom_tf>true</publish_odom_tf>
     <publish_wheel_tf>true</publish_wheel_tf>
+    <publish_wheel_joint_state>true</publish_wheel_joint_state>
 
     <odometry_frame>odom</odometry_frame>
-    <robot_base_frame>body_link</robot_base_frame>
+    <robot_base_frame>base_link</robot_base_frame>
   </plugin>
   <plugin name="wcl_debug" filename="libwcl_debug_plugin.so"/>
 </gazebo>
@@ -71,8 +72,8 @@
                 <always_on>true</always_on>
                 <visualize>true</visualize>
                 
-                <update_rate>1</update_rate>
-                <pose>0 0 0 0 0.8 0</pose>
+                <update_rate>10</update_rate>
+                <pose>0 0 0 0 0 0</pose>
                 <ray>
                         <scan>
                                 <horizontal>
@@ -83,14 +84,14 @@
                                 </horizontal>
                         </scan>
                         <range>
-                                <min>0.01</min>
+                                <min>0.35</min>
                                 <max>12.0</max>
                                 <resolution>0.005</resolution>
                         </range>
                         <noise>
                                 <type>gaussian</type>
                                 <mean>0.0</mean>
-                                <stddev>0.001</stddev>
+                                <stddev>0.0</stddev>
 
                         </noise>
 

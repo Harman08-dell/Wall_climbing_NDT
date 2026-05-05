@@ -31,7 +31,7 @@ def generate_launch_description():
     gazebo_rosPackageLaunch = PythonLaunchDescriptionSource(os.path.join(
         get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py'))
     
-    gazeboLaunch = IncludeLaunchDescription(gazebo_rosPackageLaunch, launch_arguments={'world': pathWorldFile}.items())
+    gazeboLaunch = IncludeLaunchDescription(gazebo_rosPackageLaunch, launch_arguments={'world': pathWorldFile, 'extra_gazebo_args': '--ros-args --param use_sim_time:=true'}.items())
 
 
     # 2. Spawn the robot entity in Gazebo
@@ -52,19 +52,26 @@ def generate_launch_description():
             'use_sim_time': True
         }]
     )
-    nodeJointStateBroadcaster = Node(
-    package='joint_state_publisher',
-    executable='joint_state_publisher',
-    name='joint_state_publisher',
-    output='screen'
+    staticTransformNode = Node(
+    package='tf2_ros',
+    executable='static_transform_publisher',
+    arguments=['0', '0', '0', '0', '0', '0', 'body_link', 'dummy'],
+    parameters=[{'use_sim_time': True}]
 )
-
+    # nodeJointStateBroadcaster = Node(
+    #     package='joint_state_publisher',
+    #     executable='joint_state_publisher',
+    #     name='joint_state_publisher',
+    #     output='screen',
+    #     parameters=[{'use_sim_time': True, 'source_list': ['/joint_states']}]
+    # )
     # Create the launch description and add actions
     launchDescriptionObject = LaunchDescription()
     launchDescriptionObject.add_action(gazeboLaunch)
     launchDescriptionObject.add_action(spawnModelNode)
     launchDescriptionObject.add_action(nodeRobotStatePublisher)
-    launchDescriptionObject.add_action(nodeJointStateBroadcaster)
+    launchDescriptionObject.add_action(staticTransformNode)
+    # launchDescriptionObject.add_action(nodeJointStateBroadcaster)
 
     return launchDescriptionObject
 
