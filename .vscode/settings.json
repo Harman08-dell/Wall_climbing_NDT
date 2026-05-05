@@ -1,0 +1,27 @@
+{
+    "cmake.sourceDirectory": "/home/harman/WCL_ws/src/cpp_WCL",
+    "python.autoComplete.extraPaths": [
+        "/home/harman/turtlebot3_ws/build/turtlebot3_teleop",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_teleop/lib/python3.10/site-packages",
+        "/home/harman/turtlebot3_ws/build/turtlebot3_example",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_example/lib/python3.10/site-packages",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_msgs/local/lib/python3.10/dist-packages",
+        "/home/harman/turtlebot3_ws/install/dynamixel_sdk_custom_interfaces/local/lib/python3.10/dist-packages",
+        "/home/harman/turtlebot3_ws/install/dynamixel_sdk/local/lib/python3.10/dist-packages",
+        "/home/harman/micro_ros_ws/install/micro_ros_msgs/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/harman/turtlebot3_ws/build/turtlebot3_teleop",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_teleop/lib/python3.10/site-packages",
+        "/home/harman/turtlebot3_ws/build/turtlebot3_example",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_example/lib/python3.10/site-packages",
+        "/home/harman/turtlebot3_ws/install/turtlebot3_msgs/local/lib/python3.10/dist-packages",
+        "/home/harman/turtlebot3_ws/install/dynamixel_sdk_custom_interfaces/local/lib/python3.10/dist-packages",
+        "/home/harman/turtlebot3_ws/install/dynamixel_sdk/local/lib/python3.10/dist-packages",
+        "/home/harman/micro_ros_ws/install/micro_ros_msgs/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}

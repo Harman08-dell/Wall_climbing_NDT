@@ -1,0 +1,101 @@
+#============================================================
+#  SLAM Toolbox — Online Async mode
+#  Tuned for cpp_wcl differential drive robot
+#  LiDAR: /scan  |  Odom: /odom  |  Base frame: body_link
+# ============================================================
+
+slam_toolbox:
+  ros__parameters:
+
+    # ----- Mode -----
+    # online_async: builds map in real-time as robot moves.
+    # This is the standard starting mode for beginners.
+    #This is a Google - made math optimizer
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    # ----- TF Frames -----
+    # odom_frame:  where encoder dead-reckoning lives
+    # map_frame:   fixed world frame SLAM creates
+    # base_frame:  your robot body — matches robot_base_frame in your gazebo plugin
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link        # <-- your URDF uses body_link, not base_link
+
+    # ----- Topics -----
+    scan_topic: /scan            # matches your lidar plugin remapping
+    use_map_saver: true
+
+    # ----- Scan Matching -----
+    # How SLAM compares current LiDAR scan to the map to correct drift.
+    mode: localization                # 'mapping' builds a new map; 'localization' uses a saved one
+    
+    map_file_name: /home/harman/WCL_ws/maps/slam_map2.yaml
+    map_start_at_dock: true
+    # Minimum distance/angle robot must move before a new scan is processed.
+    # Too small = too many updates = slow. Too large = coarse map.
+    minimum_travel_distance: 0.2       # metres
+    minimum_travel_heading: 0.1745     # radians (~10 degrees)
+
+    # ----- Map parameters -----
+    map_update_interval: 5.0           # seconds between map publishes to /map topic
+    resolution: 0.05                   # metres per pixel — 5 cm resolution is standard
+
+    # ----- Scan parameters -----
+    # These should match your LiDAR config in robot.gazebo
+    # Your LiDAR: min_angle=-3.14, max_angle=3.14, range max=12.0
+    max_laser_range: 12.0   
+    minimum_laser_range: 0.35            # must match your sensor's max range
+    minimum_time_interval: 0.5         # seconds between scan processing (your lidar is 1 Hz, so 0.5 is fine)
+
+    # ----- Loop closure -----
+    # Loop closure = when robot returns to a previously visited place,
+    # SLAM recognises it and corrects accumulated drift.
+    # These values control how aggressively it searches.
+    loop_search_maximum_distance: 3.0  # metres — how far to search for a loop closure candidate
+    do_loop_closing: true
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_fine: 0.45
+
+    # ----- Scan matching thresholds -----
+    # correlation_search_space: how wide an area to search when matching a scan
+    link_match_minimum_response_fine: 0.45
+    link_scan_maximum_distance: 1.5    # metres
+    loop_search_space_dimension: 8.0
+
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+
+    distance_variance_penalty: 0.5
+    angle_variance_penalty: 1.0
+
+    fine_search_angle_offset: 0.00349  # radians
+    coarse_search_angle_offset: 0.349
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
+
+    # ----- Pose graph -----
+    # Every time the robot moves, SLAM adds a new node to a pose graph.
+    # Nodes are connected by edges representing how much the robot moved.
+    use_scan_barycenter: true
+    scan_buffer_size: 10               # how many scans to keep in the buffer
+    scan_buffer_maximum_scan_distance: 10.0
+
+    # ----- Debugging (set false in production) -----
+    debug_logging: false
+    throttle_scans: 3                  # process every Nth scan (1 = process all)
+    transform_publish_period: 0.02     # seconds — how often to publish map→odom TF
+    transform_timeout: 0.2            # seconds to wait for TF lookups
+    tf_buffer_duration: 30.0          # seconds of TF history to keep
