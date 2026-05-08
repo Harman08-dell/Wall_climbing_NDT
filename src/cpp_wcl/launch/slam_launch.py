@@ -135,7 +135,7 @@ def generate_launch_description():
     )
     joy_node = Node(
     package='joy',
-    executable='joy_node',
+    executable='game_controller_node',
     name='joy_node',
     output='screen',
     parameters=[{'device': '/dev/input/js0'}],
@@ -144,7 +144,7 @@ def generate_launch_description():
     teleop_joy = Node(
     package='teleop_twist_joy',
     executable='teleop_node',
-    name='teleop_twist_joy',
+    name='teleop_twist_joy_node',
     output='screen',
     parameters=[joy_config],
     remappings=[('cmd_vel', '/cmd_vel')],
