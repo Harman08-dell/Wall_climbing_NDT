@@ -28,8 +28,8 @@ private:
 
     // Negative sign fixes PS4 axis inversion
     // forward stick push → negative axes[1] → needs negation to become positive
-    float lin =  -msg->axes[0] * 0.8f;
-    float ang =   msg->axes[1] * 0.8f;
+    float lin =  -msg->axes[1] * 1.0f;
+    float ang =   msg->axes[3] * 1.0f;
 
     // Deadband on RPi side — dont publish noise when stick is at rest
     const float DB = 0.05f;

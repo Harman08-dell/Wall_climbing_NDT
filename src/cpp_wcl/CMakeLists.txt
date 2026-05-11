@@ -25,6 +25,14 @@ src/wcl_debug_plugin.cpp
 )
 add_executable(Teleop src/Teleop.cpp)
 ament_target_dependencies(Teleop rclcpp geometry_msgs sensor_msgs)
+add_executable(robotic_arm src/robotic_arm.cpp)
+ament_target_dependencies(
+  robotic_arm
+  rclcpp
+  std_msgs
+  geometry_msgs
+  sensor_msgs
+)
 
 target_link_libraries(wcl_debug_plugin
   ${GAZEBO_LIBRARIES}
@@ -41,6 +49,8 @@ install(
     
    
     Teleop
+    robotic_arm
+
     
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )

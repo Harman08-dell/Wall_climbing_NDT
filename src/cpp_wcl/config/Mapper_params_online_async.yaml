@@ -47,7 +47,7 @@ slam_toolbox:
     # These should match your LiDAR config in robot.gazebo
     # Your LiDAR: min_angle=-3.14, max_angle=3.14, range max=12.0
     max_laser_range: 12.0   
-    minimum_laser_range: 0.35            # must match your sensor's max range
+    minimum_laser_range: 0.12          # must match your sensor's max range
     minimum_time_interval: 0.5         # seconds between scan processing (your lidar is 1 Hz, so 0.5 is fine)
 
     # ----- Loop closure -----
@@ -95,5 +95,5 @@ slam_toolbox:
     debug_logging: false
     throttle_scans: 3                  # process every Nth scan (1 = process all)
     transform_publish_period: 0.02     # seconds — how often to publish map→odom TF
-    transform_timeout: 0.2            # seconds to wait for TF lookups
+    transform_timeout: 1.0            # seconds to wait for TF lookups
     tf_buffer_duration: 30.0          # seconds of TF history to keep
